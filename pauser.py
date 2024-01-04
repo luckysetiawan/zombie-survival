@@ -2,12 +2,12 @@ class Pause(object):
     def __init__(self, paused=False):
         self.paused = paused
         self.timer = 0
-        # default ga ada time limit
+        # default no time limit
         self.pauseTime = None
-        # fungsi yang dijalankan setelah pause
+        # function executed after pause
         self.func = None
         
-    # untuk pause yang ada waktunya
+    # for timed pauses
     def update(self, dt):
         if self.pauseTime is not None:
             self.timer += dt
@@ -25,6 +25,6 @@ class Pause(object):
         self.pauseTime = pauseTime
         self.flip()
 
-    # ganti state pause
+    # change state pause
     def flip(self):
         self.paused = not self.paused

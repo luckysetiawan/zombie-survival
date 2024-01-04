@@ -2,10 +2,10 @@ import math
 
 class Vector2(object):
     def __init__(self, x=0, y=0):
-        # koordinat vektor
+        # coordinate vector
         self.x = x
         self.y = y
-        # nilai max perbedaan vektor
+        # max value of vector difference
         self.thresh = 0.000001
 
     # methods arithmetic
@@ -22,7 +22,7 @@ class Vector2(object):
         return Vector2(self.x * scalar, self.y * scalar)
 
     def __div__(self, scalar):
-        # menghindari pembagian 0
+        # avoid division by 0
         if scalar != 0:
             return Vector2(self.x / float(scalar), self.y / float(scalar))
         return None
@@ -31,23 +31,23 @@ class Vector2(object):
     def __truediv__(self, scalar):
         return self.__div__(scalar)
 
-    # cek kesamaan 2 vektor
+    # check the similarity of 2 vectors
     def __eq__(self, other):
         if abs(self.x - other.x) < self.thresh:
             if abs(self.y - other.y) < self.thresh:
                 return True
         return False
 
-    # kuadrat jarak vector (menghindari akar)
+    # squared distance vector (root avoidance)
     def magnitudeSquared(self):
         return self.x**2 + self.y**2
     
-    # jarak vector
+    # distance vector
     def magnitude(self):
         return math.sqrt(self.magnitudeSquared())
 
-    # duplikasi vector 
-    # supaya dapat memodifikasi vektor baru tanpa menyentuh vektor lama
+    # vector duplication 
+    # so you can modify the new vector without touching the old vector
     def copy(self):
         return Vector2(self.x, self.y)
 
@@ -57,6 +57,6 @@ class Vector2(object):
     def asInt(self):
         return int(self.x), int(self.y)
 
-    # print posisi vector
+    # print vector position
     def __str__(self):
         return "<"+str(self.x)+", "+str(self.y)+">"

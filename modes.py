@@ -1,12 +1,12 @@
 from constants import *
 
 class MainMode(object):
-    # saat awal zombie akan wander
+    # when the zombie starts to wander
     def __init__(self):
         self.timer = 0
         self.wander()
 
-    # perpindahan mode zombie
+    # zombie mode switching
     def update(self, dt):
         self.timer += dt
         if self.timer >= self.time:
@@ -25,7 +25,7 @@ class MainMode(object):
         self.time = 20
         self.timer = 0
 
-# mengendalikan mode zombie
+# controlling zombie mode
 class ModeController(object):
     def __init__(self, entity):
         self.timer = 0

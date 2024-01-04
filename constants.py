@@ -16,7 +16,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
-# Nilai arah (key untuk dictionary)
+# Direction value (key for dictionary)
 STOP = 0
 UP = 1
 DOWN = -1

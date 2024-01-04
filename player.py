@@ -15,20 +15,20 @@ class Player(Entity):
             RIGHT:Vector2(1, 0), 
             STOP:Vector2()
         }
-        # arah awal
+        # initial direction
         self.direction = STOP
         self.speed = 100
-        # besar player
+        # player size
         self.radius = 10
         self.color = YELLOW
         self.node = node
         self.setPosition()
-        # target (player pergi ke mana)
+        # target (player's destination)
         self.target = node
-        # status hidup player
+        # player life status
         self.alive = True
 
-    # reset saat mati
+    # reset on death
     def reset(self):
         Entity.reset(self)
         self.alive = True
@@ -37,17 +37,17 @@ class Player(Entity):
         self.alive = False
         self.direction = STOP
     
-    # salin posisi vector
+    # copy vector position
     def setPosition(self):
         self.position = self.node.position.copy()
 
-    # cek keyboard input
+    # input keyboard check
     def update(self, dt):
         self.position += self.directions[self.direction]*self.speed*dt
         direction = self.getValidKey()
         if self.overshotTarget():
             self.node = self.target
-            # jika ada 2 portal maka menjadi portal 2 arah
+            # if there are 2 portals then it becomes a 2-way portal
             if self.node.neighbors[PORTAL] is not None:
                 self.node = self.node.neighbors[PORTAL]
             self.target = self.getNewTarget(direction)
@@ -91,25 +91,25 @@ class Player(Entity):
         p = self.position.asInt()
         pygame.draw.circle(screen, self.color, p, self.radius)
 
-    # cek jika player overshot target node
+    # check if the player overshot the target node
     def overshotTarget(self):
         if self.target is not None:
             vec1 = self.target.position - self.node.position
             vec2 = self.position - self.node.position
             node2Target = vec1.magnitudeSquared()
             node2Self = vec2.magnitudeSquared()
-            # jika jarak player lebih dari jarak 2 node return true
+            # if the player's distance is more than 2 nodes return true
             return node2Self >= node2Target
         return False
 
-    # ganti arah
+    # change direction
     def reverseDirection(self):
         self.direction *= -1
         temp = self.node
         self.node = self.target
         self.target = temp
 
-    # cek input keyboard kebalikan dari arah
+    # check keyboard input in the reverse direction
     def oppositeDirection(self, direction):
         if direction is not STOP:
             if direction == self.direction * -1:

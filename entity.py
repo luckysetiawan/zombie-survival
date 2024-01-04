@@ -14,14 +14,14 @@ class Entity(object):
         self.radius = 10
         self.collideRadius = 5
         self.color = WHITE
-        # entity terlihat
+        # entity's visibility
         self.visible = True
         self.disablePortal = False
         self.goal = None
         self.directionMethod = self.randomDirection
         self.setStartNode(node)
 
-    #assign start node
+    # assign start node
     def setStartNode(self, node):
         self.node = node
         self.startNode = node
@@ -70,17 +70,17 @@ class Entity(object):
                 return True
         return False
 
-    # adjust speed berdasarkan ukuran maze
+    # adjust speed based on maze size
     def setSpeed(self, speed):
         self.speed = speed * TILEWIDTH / 16
 
-    # render jika entity visible
+    # render if entity is visible
     def render(self, screen):
         if self.visible:
             p = self.position.asInt()
             pygame.draw.circle(screen, self.color, p, self.radius)
 
-    # saat entity sampai di sebuah node, pilih arah secara random (basic)
+    # when the entity reaches a node, choose a direction randomly (basic)
     def update(self, dt):
         self.position += self.directions[self.direction]*self.speed*dt
          
@@ -99,43 +99,43 @@ class Entity(object):
 
             self.setPosition()
 
-    # get list valid direction untuk entity
+    # get list of valid directions for the entity
     def validDirections(self):
         directions = []
         for key in [UP, DOWN, LEFT, RIGHT]:
-            # arah valid
+            # valid direction
             if self.validDirection(key):
-                # bukan kembali ke arah asal
+                # not turning back
                 if key != self.direction * -1:
                     directions.append(key)
-        # kosong = jalan buntu, terpaksa balik
+        # empty = dead end, forced to turn back
         if len(directions) == 0:
             directions.append(self.direction * -1)
         return directions
 
-    # pilih arah secara random
+    # choose a direction randomly
     def randomDirection(self, directions):
         return directions[randint(0, len(directions)-1)]
 
-    # tentukan goal secara heuristic
+    # set the goal heuristically
     def goalHeuristic(self, directions):
         distances = []
-        # ambil list arah
+        # retrieve direction list
         for direction in directions:
-            # hitung jarak entity ke goal
+            # calculate the distance of the entity to the goal
             vec = self.node.position  + self.directions[direction]*TILEWIDTH - self.goal
             distances.append(vec.magnitudeSquared())
         index = distances.index(min(distances))
         return directions[index]
 
-    # tentukan goal secara a*
+    # set the goal by a*
     def goalAstar(self, directions):
         distances = []
-        # ambil list arah
+        # retrieve direction list
         for direction in directions:
-            # hitung jarak entity ke goal 
+            # calculate the distance of the entity to the goal 
             heuristic = self.node.position  + self.directions[direction]*TILEWIDTH - self.goal
-            # hitung cost entity ke node arah 
+            # calculate the cost of the entity to the direction node
             cost = self.directions[direction]*TILEWIDTH
             distances.append(heuristic.magnitudeSquared() + cost.magnitudeSquared())
 

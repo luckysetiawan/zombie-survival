@@ -40,7 +40,7 @@ class Zombie(Entity):
         else:
             self.directionMethod = self.goalAstar
 
-    # reset zombie saat player mati
+    # zombie reset when player dies
     def reset(self):
         Entity.reset(self)
         self.points = 200

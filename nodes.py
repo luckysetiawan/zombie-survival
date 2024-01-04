@@ -8,7 +8,7 @@ class Node(object):
         self.position = Vector2(x, y)
         self.neighbors = {UP:None, DOWN:None, LEFT:None, RIGHT:None, PORTAL:None}
 
-    # tampilkan node di screen
+    # show nodes on screen
     def render(self, screen):
         for n in self.neighbors.keys():
             if self.neighbors[n] is not None:
@@ -18,11 +18,11 @@ class Node(object):
                 pygame.draw.circle(screen, RED, self.position.asInt(), 12)
 
 class NodeGroup(object):
-    # bikin node
+    # create a node
     def __init__(self, level):
-        # map dari text file
+        # map from text file
         self.level = level 
-        # Look Up Table : dictionary untuk node
+        # Look Up Table: dictionary for nodes
         self.nodesLUT = {}
         self.nodeSymbols = ['+']
         self.pathSymbols = ['.']
@@ -31,51 +31,51 @@ class NodeGroup(object):
         self.connectHorizontally(data)
         self.connectVertically(data)
 
-    # baca file text, dtype supaya tidak dibaca sebagai float
+    # read text file, dtype so that it is not read as float
     def readMazeFile(self, textfile):
         return np.loadtxt(textfile, dtype='<U1')
 
-    # membuat table node
+    # create a node table
     def createNodeTable(self, data, xoffset=0, yoffset=0):
         for row in list(range(data.shape[0])):
             for col in list(range(data.shape[1])):
-                # setiap ada char '+' masukkan node ke LUT
+                # every time there is a '+' char insert the node into the LUT
                 if data[row][col] in self.nodeSymbols:
-                    # convert row & column ke nilai pixel
+                    # convert row & column to pixel values
                     x, y = self.constructKey(col+xoffset, row+yoffset)
                     self.nodesLUT[(x, y)] = Node(x, y)
 
     def constructKey(self, x, y):
         return x * TILEWIDTH, y * TILEHEIGHT
 
-    # menghubungkan node secara horizontal
-    # jika menemukan node yang keynya tidak None, maka pasti node tsb terhubung horizontal
+    # connects nodes horizontally
+    # if it finds a node whose key is not None, then it must be horizontally connected.
     def connectHorizontally(self, data, xoffset=0, yoffset=0):
         for row in list(range(data.shape[0])):
             key = None
             for col in list(range(data.shape[1])):
-                # mencari char '+'
+                # search for char '+'
                 if data[row][col] in self.nodeSymbols:
                     if key is None:
-                        # key = row + column sebuah node
+                        # key = row + column of a node
                         key = self.constructKey(col + xoffset, row + yoffset)
                     else:
                         otherkey = self.constructKey(col + xoffset, row + yoffset)
                         self.nodesLUT[key].neighbors[RIGHT] = self.nodesLUT[otherkey]
                         self.nodesLUT[otherkey].neighbors[LEFT] = self.nodesLUT[key]
                         key = otherkey
-                # jika bukan char '.' berarti key = none
+                # if not char '.' means key = none
                 elif data[row][col] not in self.pathSymbols:
                     key = None
 
-    # menghubungkan node secara vertikal
+    # connects nodes vertically
     def connectVertically(self, data, xoffset=0, yoffset=0):
-        # tukar row & col
+        # swap row & col
         dataT = data.transpose()
         for col in list(range(dataT.shape[0])):
             key = None
             for row in list(range(dataT.shape[1])):
-                # mencari char '+'
+                # search for char '+'
                 if dataT[col][row] in self.nodeSymbols:
                     if key is None:
                         key = self.constructKey(col + xoffset, row + yoffset)
@@ -84,17 +84,17 @@ class NodeGroup(object):
                         self.nodesLUT[key].neighbors[DOWN] = self.nodesLUT[otherkey]
                         self.nodesLUT[otherkey].neighbors[UP] = self.nodesLUT[key]
                         key = otherkey
-                # jika bukan char '.' berarti key = none
+                # if not char '.' means key = none
                 elif dataT[col][row] not in self.pathSymbols:
                     key = None
 
-    # ambil node dari nilai x & y tertentu
+    # retrieve nodes from specific x & y values
     def getNodeFromPixels(self, xpixel, ypixel):
         if (xpixel, ypixel) in self.nodesLUT.keys():
             return self.nodesLUT[(xpixel, ypixel)]
         return None
 
-    # ambil node dari nilai col & row tertentu
+    # retrieve nodes from specific col & row values
     def getNodeFromTiles(self, col, row):
         x, y = self.constructKey(col, row)
         if (x, y) in self.nodesLUT.keys():
@@ -110,7 +110,7 @@ class NodeGroup(object):
         for node in self.nodesLUT.values():
             node.render(screen)
     
-    # portal berpindah pada 2 titik dengan 2 arah
+    # portal moves at 2 points in 2 directions
     def setPortalPair(self, pair1, pair2):
         key1 = self.constructKey(*pair1)
         key2 = self.constructKey(*pair2)

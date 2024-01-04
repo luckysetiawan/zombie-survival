@@ -47,14 +47,14 @@ class GameController(object):
     def startGame(self, ai_method):
         self.setBackground()
         self.nodes = NodeGroup("map.txt")
-        # set koordinat titik portal
+        # set portal point coordinates
         self.nodes.setPortalPair((0,17), (27,17))
         self.player = Player(self.nodes.getNodeFromTiles(15, 26))
         self.zombie = Zombie(self.nodes.getNodeFromTiles(12, 14), self.player, ai_method)
 
-    # dipanggil tiap ganti frame (gameloop)
+    # called every frame change (gameloop)
     def update(self):
-        # waktu dalam detik
+        # time in seconds
         dt = self.clock.tick(30) / 1000.0
         self.textgroup.update(dt)
         if not self.pause.paused:
@@ -65,9 +65,9 @@ class GameController(object):
         afterPauseMethod = self.pause.update(dt)
         if afterPauseMethod is not None:
             afterPauseMethod()
-        # cek event tertentu
+        # check for specific events
         self.checkEvents()
-        # draw image ke screen
+        # draw image to the screen
         self.render()
 
     # update score
@@ -108,7 +108,7 @@ class GameController(object):
         self.player.visible = False
 
     def render(self):
-        # gambar ulang supaya tidak tumpang tindih
+        # redraw so that there is no overlap
         self.screen.blit(self.background, (0, 0))
         self.nodes.render(self.screen)
         self.player.render(self.screen)
